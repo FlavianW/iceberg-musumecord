@@ -6,15 +6,16 @@ services:
     build: .
     restart: unless-stopped
     ports:
-      - "3000:3000"
+      # GAUCHE = Port du serveur (qu'il choisit)
+      # DROITE = Port du conteneur (ne pas toucher au 3000)
+      - "8080:3000" 
     environment:
       - ADMIN_USER=adminMusume
       - ADMIN_PASS=habibi
-      # CHANGEMENT 1 : On pointe la BDD vers un dossier dédié aux données (/app/data)
-      # et non plus dans /app/prisma
+      # L'URL publique exacte (https://...)
+      # Sans ça, erreur 403 sur le formulaire !
+      - ORIGIN=https://son-domaine.com 
       - DATABASE_URL=file:/app/data/prod.db
       - BODY_SIZE_LIMIT=512000
-      - ORIGIN=http://localhost:3000
     volumes:
-      # CHANGEMENT 2 : On monte le volume dans /app/data pour ne pas écraser le code source
       - ./db-data:/app/data
