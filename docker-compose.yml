@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  iceberg-app:
+    container_name: iceberg-musume
+    build: .
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - ADMIN_USER=adminMusume
+      - ADMIN_PASS=habibi
+      # CHANGEMENT 1 : On pointe la BDD vers un dossier dédié aux données (/app/data)
+      # et non plus dans /app/prisma
+      - DATABASE_URL=file:/app/data/prod.db
+      - BODY_SIZE_LIMIT=512000
+      - ORIGIN=http://localhost:3000
+    volumes:
+      # CHANGEMENT 2 : On monte le volume dans /app/data pour ne pas écraser le code source
+      - ./db-data:/app/data
